@@ -1,6 +1,5 @@
 
 import math
-import string
 import re
 
 class Format:
