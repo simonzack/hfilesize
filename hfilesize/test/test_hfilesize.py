@@ -4,11 +4,15 @@ from hfilesize import Format, FileSize
 
 class TestHFileSize(unittest.TestCase):
 	def test_parse(self):
+		# basic tests on integers with no units
 		self.assertEqual(FileSize(1), 1)
 		self.assertEqual(FileSize('1'), 1)
 		self.assertEqual(FileSize('-1'), -1)
+
+		# int base
 		self.assertEqual(FileSize('0x12', 16), 0x12)
 
+		# case sensitive
 		self.assertEqual(FileSize('1k'), 1000)
 		self.assertEqual(FileSize('1K'), 1024)
 		self.assertEqual(FileSize('1kib'), 1024)
@@ -17,7 +21,6 @@ class TestHFileSize(unittest.TestCase):
 		self.assertEqual(FileSize('1kB'), 1000)
 		self.assertEqual(FileSize('1Kb'), 1024)
 		self.assertEqual(FileSize('1KB'), 1024)
-		self.assertEqual(FileSize('1 k'), 1000)
 
 		self.assertEqual(FileSize('1k'), 1000**1)
 		self.assertEqual(FileSize('1m'), 1000**2)
@@ -27,6 +30,7 @@ class TestHFileSize(unittest.TestCase):
 		self.assertEqual(FileSize('1e'), 1000**6)
 		self.assertEqual(FileSize('1z'), 1000**7)
 		self.assertEqual(FileSize('1y'), 1000**8)
+
 		self.assertEqual(FileSize('1K'), 1024**1)
 		self.assertEqual(FileSize('1M'), 1024**2)
 		self.assertEqual(FileSize('1G'), 1024**3)
@@ -36,6 +40,14 @@ class TestHFileSize(unittest.TestCase):
 		self.assertEqual(FileSize('1Z'), 1024**7)
 		self.assertEqual(FileSize('1Y'), 1024**8)
 
+		# case insensitive
+		self.assertEqual(FileSize('1K', default_binary=False, case_sensitive=False), 1000**1)
+		self.assertEqual(FileSize('1K', default_binary=True, case_sensitive=False), 1024**1)
+
+		# spacing
+		self.assertEqual(FileSize('1 k'), 1000)
+
+		# invalid values
 		with self.assertRaises(ValueError):
 			FileSize(1.1)
 		with self.assertRaises(ValueError):
@@ -61,6 +73,9 @@ class TestHFileSize(unittest.TestCase):
 		self.assertEqual(FileSize(1024).format(base=1024, size_fmt=Format.casing), '1 KB')
 		self.assertEqual(FileSize(1025).format(base=1024, size_fmt=Format.casing), '1.00 KB')
 		self.assertEqual(FileSize(2048).format(base=1024, size_fmt=Format.casing), '2 KB')
+
+		# exponent
+		self.assertEqual(FileSize(1024).format(base=1024, size_fmt=Format.casing, exponent=0), '1024 bytes')
 
 		# exponent bounds check
 		with self.assertRaises(ValueError):
