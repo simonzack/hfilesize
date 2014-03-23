@@ -207,12 +207,11 @@ class FileSize(int):
 		'''
 		Parse file size, only accept ints as float has loss of precision, and using it is usually a user error.
 		Otherwise allow any string int() allows.
-		Upper-case is treated as binary, as this is commonly done in linux utilites (e.g. dd).
 		Bits are not used in file size descriptions hence ignored.
 
 		args:
 			case_sensitive:
-				use 1024 for upper case and 1000 for lower case if casing exists
+				use 1024 for upper case and 1000 for lower case if casing exists, as is common in unix utilities, e.g. dd
 
 			default_binary:
 				default base if it is not clear what the unit is (i.e. if it is not 'mib' or 'mebibytes')
@@ -241,14 +240,40 @@ class FileSize(int):
 		else:
 			raise ValueError
 
-	def format(self, float_fmt, date_fmt=Format.casing, exponent=None):
-		# Try to infer the base from the format if it only has one format.
-
-
+	def format(self, float_fmt, date_fmt=Format.casing, base=None, exponent=None):
+		# base
+		if base is None:
+			# Try to infer the base from the format if it only has one format.
+			if len(date_fmt)==1:
+				base = next(iter(date_fmt))
+			else:
+				raise ValueError('base must be specified as it cannot be inferred')
+		try:
+			date_suffixes = date_fmt[base]
+		except KeyError:
+			raise ValueError('base')
+		# exponent
 		if exponent is None:
-			exponent =
-
-		pass
+			# Get exponent if not specified.
+			exponent = math.log(self, base)
+			exponent -= exponent%3
+			exponent = min(exponent, 0)
+			exponent = max(exponent, len(date_suffixes)*3)
+		if not 0<=exponent<=len(date_suffixes)*3:
+			raise ValueError('exponent out of range')
+		if exponent%3!=0:
+			raise ValueError('exponent not a multiple of 3')
+		# suffix
+		suffix = date_suffixes[exponent//3]
+		if isinstance(suffix, tuple):
+			suffix = suffix[0] if self == base**exponent else suffix[1]
+		# size
+		if self%(base**exponent)==0:
+			size = self//base**exponent
+		else:
+			size = self/base**exponent
+		# format final result
+		return '{size:{float_fmt}}{suffix}'.format(size=size, float_fmt=float_fmt, suffix=suffix)
 
 	def __format__(self, fmt):
 		# is it an empty format or not a special format for the size class
