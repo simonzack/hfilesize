@@ -279,15 +279,19 @@ class FileSize(int):
 	def __format__(self, fmt):
 		'''
 		format specification:
-			format type:	h[size_format[^exponent]]
+			format type:	h[size_format][_base][^exponent]
 			size_format:	c | cs | cv | e | ev | s | sv
-			exponent:		k | m | g | t | p | e | z | y | K | M | G | T | P | E | Z | Y
+			base:			b | d
+			exponent:		k | m | g | t | p | e | z | y
+
+		base is required sometimes if no exponent is specified
+		using uppercase/lowercase to specify the base instead has the problem that there is no way to allow the base to be unspecified
 		'''
 		# is it an empty format or not a special format for the size class
-		matches = re.search(r'h(?:(c|cs|cv|e|ev|s|sv)(?:\^([kmgtpezyKMGTPEZY]))?)?$', fmt)
+		matches = re.search(r'h(?:(c|cs|cv|e|ev|s|sv)?(?:_([bd]))?(?:\^([kmgtpezy]))?)?$', fmt)
 		if not matches:
 			return int(self).__format__(fmt)
-		size_fmt, exponent = matches.groups()
+		size_fmt, base, exponent = matches.groups()
 		size_fmt = {
 			None:	Format.casing,
 			'c':	Format.casing,
@@ -298,11 +302,9 @@ class FileSize(int):
 			's':	Format.si,
 			'sv':	Format.si_verbose,
 		}[size_fmt]
-		if exponent is None:
+		if base=='b':
 			base = 1024
-		elif exponent.isupper():
-			base = 1024
-		else:
+		elif base=='d':
 			base = 1000
 		if exponent is not None:
 			exponent = exponent.lower()
