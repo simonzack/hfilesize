@@ -5,109 +5,126 @@ import re
 
 class Format:
 	# We do not provide a lower case 1024 format to minimize ambiguity.
-	casing = [
-		(1, (' byte', ' bytes')),
+	casing = {
+		1024: [
+			(' byte', ' bytes'),
+			' KB',
+			' MB',
+			' GB',
+			' TB',
+			' PB',
+			' EB',
+			' ZB',
+			' YB',
+		],
+		1000: [
+			(' byte', ' bytes'),
+			' kb',
+			' mb',
+			' gb',
+			' tb',
+			' pb',
+			' eb',
+			' zb',
+			' yb',
+		],
+	}
 
-		(1024 ** 1, ' KB'),
-		(1024 ** 2, ' MB'),
-		(1024 ** 3, ' GB'),
-		(1024 ** 4, ' TB'),
-		(1024 ** 5, ' PB'),
-		(1024 ** 6, ' EB'),
-		(1024 ** 7, ' ZB'),
-		(1024 ** 8, ' YB'),
+	casing_short = {
+		1024: [
+			'',
+			'K',
+			'M',
+			'G',
+			'T',
+			'P',
+			'E',
+			'Z',
+			'Y',
+		],
+		1000: [
+			'',
+			' kb',
+			' mb',
+			' gb',
+			' tb',
+			' pb',
+			' eb',
+			' zb',
+			' yb',
+		],
+	}
 
-		(1000 ** 1, ' kb'),
-		(1000 ** 2, ' mb'),
-		(1000 ** 3, ' gb'),
-		(1000 ** 4, ' tb'),
-		(1000 ** 5, ' pb'),
-		(1000 ** 6, ' eb'),
-		(1000 ** 7, ' zb'),
-		(1000 ** 8, ' yb'),
-	]
+	casing_verbose = {
+		1024: [
+			(' byte', ' bytes'),
+			(' kilobyte', ' kilobytes'),
+			(' megabyte', ' megabytes'),
+			(' gigabyte', ' gigabytes'),
+			(' terabyte', ' terabytes'),
+			(' petabyte', ' petabytes'),
+			(' exabyte', ' exabytes'),
+			(' zettabyte', ' zettabytes'),
+			(' yottabyte', ' yottabytes'),
+		]
+	}
 
-	casing_short = [
-		(1, ''),
+	iec = {
+		1024: [
+			'',
+			' KiB',
+			' MiB',
+			' GiB',
+			' TiB',
+			' PiB',
+			' EiB',
+			' ZiB',
+			' YiB',
+		]
+	}
 
-		(1024 ** 1, 'K'),
-		(1024 ** 2, 'M'),
-		(1024 ** 3, 'G'),
-		(1024 ** 4, 'T'),
-		(1024 ** 5, 'P'),
-		(1024 ** 6, 'E'),
-		(1024 ** 7, 'Z'),
-		(1024 ** 8, 'Y'),
+	iec_verbose = {
+		1024: [
+			(' byte', ' bytes'),
+			(' kibibyte', 'kibibytes'),
+			(' mebibyte', 'mebibytes'),
+			(' gibibyte', 'gibibytes'),
+			(' tebibyte', 'tebibytes'),
+			(' pebibyte', 'pebibytes'),
+			(' exbibyte', 'exbibytes'),
+			(' zebibyte', 'zebibytes'),
+			(' yobibyte', 'yobibytes'),
+		]
+	}
 
-		(1000 ** 1, ' kb'),
-		(1000 ** 2, ' mb'),
-		(1000 ** 3, ' gb'),
-		(1000 ** 4, ' tb'),
-		(1000 ** 5, ' pb'),
-		(1000 ** 6, ' eb'),
-		(1000 ** 7, ' zb'),
-		(1000 ** 8, ' yb'),
-	]
+	si = {
+		1000: [
+			' B',
+			' KB',
+			' MB',
+			' GB',
+			' TB',
+			' PB',
+			' EB',
+			' ZB',
+			' YB',
+		]
+	}
 
-	casing_verbose = [
-		(1024 ** 0, (' byte', ' bytes')),
-		(1024 ** 1, (' kilobyte', ' kilobytes')),
-		(1024 ** 2, (' megabyte', ' megabytes')),
-		(1024 ** 3, (' gigabyte', ' gigabytes')),
-		(1024 ** 4, (' terabyte', ' terabytes')),
-		(1024 ** 5, (' petabyte', ' petabytes')),
-		(1024 ** 6, (' exabyte', ' exabytes')),
-		(1024 ** 7, (' zettabyte', ' zettabytes')),
-		(1024 ** 8, (' yottabyte', ' yottabytes')),
-	]
+	si_verbose = {
+		1000: [
+			(' byte', ' bytes'),
+			(' kilobyte', ' kilobytes'),
+			(' megabyte', ' megabytes'),
+			(' gigabyte', ' gigabytes'),
+			(' terabyte', ' terabytes'),
+			(' petabyte', ' petabytes'),
+			(' exabyte', ' exabytes'),
+			(' zettabyte', ' zettabytes'),
+			(' yottabyte', ' yottabytes'),
+		]
+	}
 
-	iec = [
-		(1024 ** 0, ''),
-		(1024 ** 1, 'KiB'),
-		(1024 ** 2, 'MiB'),
-		(1024 ** 3, 'GiB'),
-		(1024 ** 4, 'TiB'),
-		(1024 ** 5, 'PiB'),
-		(1024 ** 6, 'EiB'),
-		(1024 ** 7, 'ZiB'),
-		(1024 ** 8, 'YiB'),
-	]
-
-	iec_verbose = [
-		(1024 ** 0, (' byte', ' bytes')),
-		(1024 ** 1, (' kibibyte', 'kibibytes')),
-		(1024 ** 2, (' mebibyte', 'mebibytes')),
-		(1024 ** 3, (' gibibyte', 'gibibytes')),
-		(1024 ** 4, (' tebibyte', 'tebibytes')),
-		(1024 ** 5, (' pebibyte', 'pebibytes')),
-		(1024 ** 6, (' exbibyte', 'exbibytes')),
-		(1024 ** 7, (' zebibyte', 'zebibytes')),
-		(1024 ** 8, (' yobibyte', 'yobibytes')),
-	]
-
-	si = [
-		(1000 ** 0, 'B'),
-		(1000 ** 1, 'KB'),
-		(1000 ** 2, 'MB'),
-		(1000 ** 3, 'GB'),
-		(1000 ** 4, 'TB'),
-		(1000 ** 5, 'PB'),
-		(1000 ** 6, 'EB'),
-		(1000 ** 7, 'ZB'),
-		(1000 ** 8, 'YB'),
-	]
-
-	si_verbose = [
-		(1000 ** 0, (' byte', ' bytes')),
-		(1000 ** 1, (' kilobyte', ' kilobytes')),
-		(1000 ** 2, (' megabyte', ' megabytes')),
-		(1000 ** 3, (' gigabyte', ' gigabytes')),
-		(1000 ** 4, (' terabyte', ' terabytes')),
-		(1000 ** 5, (' petabyte', ' petabytes')),
-		(1000 ** 6, (' exabyte', ' exabytes')),
-		(1000 ** 7, (' zettabyte', ' zettabytes')),
-		(1000 ** 8, (' yottabyte', ' yottabytes')),
-	]
 
 parse_dict = {
 	#(exponent, case_char, base_if_certain)
@@ -225,6 +242,9 @@ class FileSize(int):
 			raise ValueError
 
 	def format(self, float_fmt, date_fmt=Format.casing, exponent=None):
+		# Try to infer the base from the format if it only has one format.
+
+
 		if exponent is None:
 			exponent =
 
