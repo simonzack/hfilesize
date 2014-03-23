@@ -277,33 +277,44 @@ class FileSize(int):
 		return '{size:{float_fmt}}{suffix}'.format(size=size, float_fmt=float_fmt, suffix=suffix)
 
 	def __format__(self, fmt):
+		'''
+		format specification:
+			format type:	h[size_format[^exponent]]
+			size_format:	c | cs | cv | e | ev | s | sv
+			exponent:		k | m | g | t | p | e | z | y | K | M | G | T | P | E | Z | Y
+		'''
 		# is it an empty format or not a special format for the size class
-		if fmt == "" or fmt[-2:].lower() not in ["em","sm","cm"]:
-			if fmt[-1].lower() in ['b','c','d','o','x','n','e','f','g','%']:
-				# Numeric format.
-				return int(self).__format__(fmt)
-			else:
-				return str(self).__format__(fmt)
-
-		# work out the scale, suffix and base
-		factor, suffix = (8, "b") if fmt[-1] in string.ascii_lowercase else (1,"B")
-		base = 1024 if fmt[-2] in ["e","c"] else 1000
-
-		# Add the i for the IEC format
-		suffix = "i"+ suffix if fmt[-2] == "e" else suffix
-
-		mult = ["","K","M","G","T","P"]
-
-		val = float(self) * factor
-		i = 0 if val < 1 else int(math.log(val, base))+1
-		v = val / math.pow(base,i)
-		v,i = (v,i) if v > 0.5 else (v*base,i-1)
-
-		# Identify if there is a width and extract it
-		width = "" if fmt.find(".") == -1 else fmt[:fmt.index(".")]
-		precis = fmt[:-2] if width == "" else fmt[fmt.index("."):-2]
-
-		# do the precision bit first, so width/alignment works with the suffix
-		t = ("{0:{1}f}"+mult[i]+suffix).format(v, precis)
-
-		return "{0:{1}}".format(t,width) if width != "" else t
+		matches = re.search(r'h(?:(c|cs|cv|e|ev|s|sv)(?:\^([kmgtpezyKMGTPEZY]))?)?$', fmt)
+		if not matches:
+			return int(self).__format__(fmt)
+		size_fmt, exponent = matches.groups()
+		size_fmt = {
+			None:	Format.casing,
+			'c':	Format.casing,
+			'cs':	Format.casing_short,
+			'cv':	Format.casing_verbose,
+			'e':	Format.iec,
+			'ev':	Format.iec_verbose,
+			's':	Format.si,
+			'sv':	Format.si_verbose,
+		}[size_fmt]
+		if exponent is None:
+			base = 1024
+		elif exponent.isupper():
+			base = 1024
+		else:
+			base = 1000
+		if exponent is not None:
+			exponent = exponent.lower()
+		exponent = {
+			None: None,
+			'k': 1,
+			'm': 2,
+			'g': 3,
+			't': 4,
+			'p': 5,
+			'e': 6,
+			'z': 7,
+			'y': 8,
+		}[exponent]
+		return self.format(base=base, exponent=exponent, float_fmt=fmt[:matches.start(0)], size_fmt=size_fmt)

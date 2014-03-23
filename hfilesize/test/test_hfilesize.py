@@ -82,3 +82,7 @@ class TestHFileSize(unittest.TestCase):
 			FileSize(1024).format(base=1024, size_fmt=Format.casing, exponent = 100)
 		with self.assertRaises(ValueError):
 			FileSize(1024).format(base=1024, size_fmt=Format.casing, exponent = -1)
+
+	def test_str_format(self):
+		self.assertEqual('{:d}'.format(FileSize(1024)), '1024')
+		self.assertEqual('{:.02fh}'.format(FileSize(1024)), '1 KB')
