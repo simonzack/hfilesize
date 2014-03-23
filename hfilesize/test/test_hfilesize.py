@@ -86,3 +86,4 @@ class TestHFileSize(unittest.TestCase):
 	def test_str_format(self):
 		self.assertEqual('{:d}'.format(FileSize(1024)), '1024')
 		self.assertEqual('{:.02fh}'.format(FileSize(1024)), '1 KB')
+		self.assertEqual('{: >10.02fh}'.format(FileSize(1024)), '1 KB'.rjust(10))

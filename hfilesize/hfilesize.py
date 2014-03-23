@@ -317,4 +317,10 @@ class FileSize(int):
 			'z': 7,
 			'y': 8,
 		}[exponent]
-		return self.format(base=base, exponent=exponent, float_fmt=fmt[:matches.start(0)], size_fmt=size_fmt)
+		fmt = fmt[:matches.start(0)]
+		# Get the non-float part.
+		float_fmt_matches = re.search(r'(\.\d+)?(.)?$', fmt)
+		float_res = self.format(base=base, exponent=exponent, float_fmt=float_fmt_matches.group(), size_fmt=size_fmt)
+		fmt = fmt[:float_fmt_matches.start(0)]
+		res = '{float_res:{other_fmt}}'.format(float_res=float_res, other_fmt=fmt)
+		return res
