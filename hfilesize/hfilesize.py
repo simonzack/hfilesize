@@ -281,13 +281,13 @@ class FileSize(int):
 		format specification:
 			format type:	[hH][size_format][^exponent]
 			size_format:	c | cs | cv | e | ev | s | sv
-			exponent:		k | m | g | t | p | e | z | y
+			exponent:		integer
 
 		base is required sometimes if no exponent is specified
 		always specifying the base gives a shorter format specification
 		'''
 		# is it an empty format or not a special format for the size class
-		matches = re.search(r'([hH])(?:(c|cs|cv|e|ev|s|sv)?(?:\^([kmgtpezy]))?)?$', fmt)
+		matches = re.search(r'([hH])(?:(c|cs|cv|e|ev|s|sv)?(?:\^(\d+))?)?$', fmt)
 		if not matches:
 			return int(self).__format__(fmt)
 		fmt_type, size_fmt, exponent = matches.groups()
@@ -306,18 +306,7 @@ class FileSize(int):
 		elif fmt_type=='H':
 			base = 1024
 		if exponent is not None:
-			exponent = exponent.lower()
-		exponent = {
-			None: None,
-			'k': 1,
-			'm': 2,
-			'g': 3,
-			't': 4,
-			'p': 5,
-			'e': 6,
-			'z': 7,
-			'y': 8,
-		}[exponent]
+			exponent = int(exponent)
 		fmt = fmt[:matches.start(0)]
 		# Get the non-float part.
 		float_fmt_matches = re.search(r'(\.\d+)?(.)?$', fmt)
