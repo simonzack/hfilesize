@@ -1,6 +1,6 @@
 
 import unittest
-from hfilesize import FileSize
+from hfilesize import Format, FileSize
 
 class TestHFileSize(unittest.TestCase):
 	def test_parse(self):
@@ -44,5 +44,26 @@ class TestHFileSize(unittest.TestCase):
 			FileSize('1kibb')
 
 	def test_format(self):
-		pass
-		#print('{:.2}'.format(FileSize(1)))
+		# base guessing
+		self.assertEqual(FileSize(1024).format(size_fmt=Format.casing), '1 KB')
+		with self.assertRaises(ValueError):
+			self.assertEqual(FileSize(1024).format(size_fmt=Format.si), '1 KB')
+
+		# plural
+		self.assertEqual(FileSize(0).format(base=1024, size_fmt=Format.casing), '0 bytes')
+		self.assertEqual(FileSize(1).format(base=1024, size_fmt=Format.casing), '1 byte')
+		self.assertEqual(FileSize(2).format(base=1024, size_fmt=Format.casing), '2 bytes')
+		self.assertEqual(FileSize(1024).format(base=1024, size_fmt=Format.casing_verbose), '1 kilobyte')
+		self.assertEqual(FileSize(1025).format(base=1024, size_fmt=Format.casing_verbose), '1.00 kilobytes')
+		self.assertEqual(FileSize(2048).format(base=1024, size_fmt=Format.casing_verbose), '2 kilobytes')
+
+		# float formatting
+		self.assertEqual(FileSize(1024).format(base=1024, size_fmt=Format.casing), '1 KB')
+		self.assertEqual(FileSize(1025).format(base=1024, size_fmt=Format.casing), '1.00 KB')
+		self.assertEqual(FileSize(2048).format(base=1024, size_fmt=Format.casing), '2 KB')
+
+		# exponent bounds check
+		with self.assertRaises(ValueError):
+			FileSize(1024).format(base=1024, size_fmt=Format.casing, exponent = 100)
+		with self.assertRaises(ValueError):
+			FileSize(1024).format(base=1024, size_fmt=Format.casing, exponent = -1)
