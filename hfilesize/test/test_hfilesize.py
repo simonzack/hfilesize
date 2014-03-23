@@ -88,4 +88,5 @@ class TestHFileSize(unittest.TestCase):
 		self.assertEqual('{:.02fH}'.format(FileSize(1024)), '1 KB')
 		self.assertEqual('{:.02fhs}'.format(FileSize(1000)), '1 KB')
 		self.assertEqual('{:.02fhs^0}'.format(FileSize(1000)), '1000 B')
+		self.assertEqual('{:.02fHcv}'.format(FileSize(1024)), '1 kilobyte')
 		self.assertEqual('{: >10.02fH}'.format(FileSize(1024)), '1 KB'.rjust(10))
