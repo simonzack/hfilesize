@@ -45,3 +45,4 @@ class TestHFileSize(unittest.TestCase):
 
 	def test_format(self):
 		pass
+		#print('{:.2}'.format(FileSize(1)))
