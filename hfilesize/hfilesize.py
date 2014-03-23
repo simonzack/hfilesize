@@ -305,6 +305,8 @@ class FileSize(int):
 			base = 1000
 		elif fmt_type=='H':
 			base = 1024
+		else:
+			assert False
 		if exponent is not None:
 			exponent = int(exponent)
 		fmt = fmt[:matches.start(0)]
