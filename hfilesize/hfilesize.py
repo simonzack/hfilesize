@@ -1,6 +1,11 @@
-
 import math
 import re
+import sys
+
+base_int = int
+if sys.version_info.major == 2:
+    base_int = long
+
 
 class Format:
 	# We do not provide a lower case 1024 format to minimize ambiguity.
@@ -197,7 +202,7 @@ parse_dict = {
 	'yobibytes':	(8, None, 1024),
 }
 
-class FileSize(int):
+class FileSize(base_int):
 	'''
 	Subclass of int to allow parsing & custom file size formatting.
 	'''
