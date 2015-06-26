@@ -233,9 +233,9 @@ class FileSize(int):
 				is_binary = default_binary
 			size_base = 1024 if is_binary else 1000
 			size *= size_base**exponent
-			return super().__new__(cls, size)
+			return super(FileSize, cls).__new__(cls, size)
 		elif isinstance(value, int):
-			return super().__new__(cls, value)
+			return super(FileSize, cls).__new__(cls, value)
 		else:
 			raise ValueError
 
