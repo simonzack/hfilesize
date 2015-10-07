@@ -65,4 +65,4 @@ Inspired by:
 - [Human readable file/memory sizes v2 (Python recipe) ](http://code.activestate.com/recipes/578323-human-readable-filememory-sizes-v2/)
 
 ## License
-Licensed under GPLv3.
+Licensed under MIT.
