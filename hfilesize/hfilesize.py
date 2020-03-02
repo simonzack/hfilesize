@@ -1,10 +1,5 @@
 import math
 import re
-import sys
-
-base_int = int
-if sys.version_info.major == 2:
-    base_int = long
 
 
 class Format:
@@ -202,7 +197,7 @@ parse_dict = {
     'yobibytes':    (8, None, 1024),
 }
 
-class FileSize(base_int):
+class FileSize(int):
     '''
     Subclass of int to allow parsing & custom file size formatting.
     '''
