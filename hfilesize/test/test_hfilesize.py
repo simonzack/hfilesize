@@ -1,6 +1,8 @@
 
 import unittest
-from hfilesize import Format, FileSize
+
+from hfilesize import FileSize, Format
+
 
 class TestHFileSize(unittest.TestCase):
     def test_parse(self):

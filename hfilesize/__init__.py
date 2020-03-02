@@ -1,2 +1,2 @@
 
-from .hfilesize import Format, FileSize
+from .hfilesize import FileSize, Format
