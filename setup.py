@@ -1,18 +1,13 @@
 #!/usr/bin/env python3
-import re
+from os import path
 
 from setuptools import find_packages, setup
 
-try:
-    import pypandoc
+this_directory = path.abspath(path.dirname(__file__))
 
-    with open('README.md') as file:
-        long_description = pypandoc.convert(file.read(), 'rst', format='md')
-        # `pypandoc` bug workaround
-        long_description = re.sub(r'(:alt:\s*(.+)\s*\r?\n)\s*\r?\n\s*\2', r'\1', long_description)
 
-except ImportError:
-    long_description = ''
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
     name='hfilesize',
