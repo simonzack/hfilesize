@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import re
 
 from setuptools import find_packages, setup

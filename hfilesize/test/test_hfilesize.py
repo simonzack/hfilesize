@@ -1,4 +1,3 @@
-
 import unittest
 
 from hfilesize import FileSize, Format
