@@ -80,9 +80,9 @@ class TestHFileSize(unittest.TestCase):
 
         # exponent bounds check
         with self.assertRaises(ValueError):
-            FileSize(1024).format(base=1024, size_fmt=Format.casing, exponent = 100)
+            FileSize(1024).format(base=1024, size_fmt=Format.casing, exponent=100)
         with self.assertRaises(ValueError):
-            FileSize(1024).format(base=1024, size_fmt=Format.casing, exponent = -1)
+            FileSize(1024).format(base=1024, size_fmt=Format.casing, exponent=-1)
 
     def test_str_format(self):
         self.assertEqual('{:d}'.format(FileSize(1024)), '1024')

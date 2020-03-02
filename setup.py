@@ -8,7 +8,7 @@ try:
 
     with open('README.md') as file:
         long_description = pypandoc.convert(file.read(), 'rst', format='md')
-        #pandoc bug workaround
+        # `pypandoc` bug workaround
         long_description = re.sub(r'(:alt:\s*(.+)\s*\r?\n)\s*\r?\n\s*\2', r'\1', long_description)
 
 except ImportError:
@@ -27,7 +27,7 @@ setup(
 
     packages=find_packages(),
 
-    classifiers = [
+    classifiers=[
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python :: 3',

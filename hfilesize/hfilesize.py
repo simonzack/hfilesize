@@ -126,8 +126,8 @@ class Format:
 
 
 parse_dict = {
-    #(exponent, case_char, base_if_certain)
-    #base doesn't matter for bytes
+    # `(exponent, case_char, base_if_certain)`.
+    # base doesn't matter for bytes.
     '':             (0, None, 1),
     'b':            (0, None, 1),
     'byte':         (0, None, 1),
@@ -197,6 +197,7 @@ parse_dict = {
     'yobibytes':    (8, None, 1024),
 }
 
+
 class FileSize(int):
     '''
     Subclass of int to allow parsing & custom file size formatting.
@@ -210,7 +211,8 @@ class FileSize(int):
 
         args:
             case_sensitive:
-                use 1024 for upper case and 1000 for lower case if casing exists, as is common in unix utilities, e.g. dd
+                use 1024 for upper case and 1000 for lower case if casing exists, as is common in unix utilities,
+                e.g. `dd`
 
             default_binary:
                 default base if it is not clear what the unit is (i.e. if it is not 'mib' or 'mebibytes')
@@ -232,7 +234,7 @@ class FileSize(int):
             else:
                 is_binary = default_binary
             size_base = 1024 if is_binary else 1000
-            size *= size_base**exponent
+            size *= size_base ** exponent
             return super(FileSize, cls).__new__(cls, size)
         elif isinstance(value, int):
             return super(FileSize, cls).__new__(cls, value)
@@ -243,7 +245,7 @@ class FileSize(int):
         # base
         if base is None:
             # Try to infer the base from the format if it only has one format.
-            if len(size_fmt)==1:
+            if len(size_fmt) == 1:
                 base = next(iter(size_fmt))
             else:
                 raise ValueError('base must be specified as it cannot be inferred')
@@ -260,18 +262,18 @@ class FileSize(int):
                 exponent = int(math.log(self, base))
                 exponent = max(exponent, 0)
                 exponent = min(exponent, len(date_suffixes)-1)
-        elif not 0<=exponent<len(date_suffixes):
+        elif not 0 <= exponent < len(date_suffixes):
             raise ValueError('exponent out of range')
         # suffix
         suffix = date_suffixes[exponent]
         if isinstance(suffix, tuple):
-            suffix = suffix[0] if self == base**exponent else suffix[1]
+            suffix = suffix[0] if self == base ** exponent else suffix[1]
         # size
-        if self%(base**exponent)==0:
+        if self % (base ** exponent) == 0:
             float_fmt = ''
-            size = self//(base**exponent)
+            size = self//(base ** exponent)
         else:
-            size = self/(base**exponent)
+            size = self/(base ** exponent)
         # format final result
         return '{size:{float_fmt}}{suffix}'.format(size=size, float_fmt=float_fmt, suffix=suffix)
 
@@ -300,9 +302,9 @@ class FileSize(int):
             's':    Format.si,
             'sv':   Format.si_verbose,
         }[size_fmt]
-        if fmt_type=='h':
+        if fmt_type == 'h':
             base = 1000
-        elif fmt_type=='H':
+        elif fmt_type == 'H':
             base = 1024
         else:
             assert False
