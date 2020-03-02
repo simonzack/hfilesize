@@ -1,6 +1,9 @@
+# PyCharm
+/.idea/
 
-#ide files
-.idea
+# Byte-compiled
+__pycache__/
 
-#caches
-__pycache__
+# Distribution / packaging
+dist/
+*.egg-info/
