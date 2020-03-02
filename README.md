@@ -1,9 +1,7 @@
 # Human Readable File Sizes
-
 Parses & Formats integer file sizes to human readable file sizes.
 
 ## Example Usage
-
 ### Parsing
 
     >>> from hfilesize import Format, FileSize
@@ -34,9 +32,7 @@ Parses & Formats integer file sizes to human readable file sizes.
     ... '      1 KB'
 
 ## Documentation
-
 ### Parsing Options
-
 - `case_sensitive`:
 Use 1024 for upper case and 1000 for lower case if casing exists, as is common in unix utilities, e.g. dd
 
@@ -44,7 +40,6 @@ Use 1024 for upper case and 1000 for lower case if casing exists, as is common i
 Default base if it is not clear what the unit is (i.e. if it is not 'mib' or 'mebibytes')
 
 ### Formatting Options
-
 - format type:      `[hH][size_format][^exponent]`
     - `h`:              Base 1000
     - `H`:              Base 1024
@@ -62,7 +57,7 @@ Default base if it is not clear what the unit is (i.e. if it is not 'mib' or 'me
 Inspired by:
 
 - [`hurry.filesize`](https://pypi.python.org/pypi/hurry.filesize)
-- [Human readable file/memory sizes v2 (Python recipe) ](http://code.activestate.com/recipes/578323-human-readable-filememory-sizes-v2/)
+- [Human readable file/memory sizes v2 (Python recipe)](http://code.activestate.com/recipes/578323-human-readable-filememory-sizes-v2/)
 
 ## License
 Licensed under MIT.
