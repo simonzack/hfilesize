@@ -6,6 +6,7 @@ from hfilesize import FileSize, Format
 class TestHFileSize(unittest.TestCase):
     def test_parse(self):
         # basic tests on integers with no units
+        self.assertEqual(FileSize(), 0)
         self.assertEqual(FileSize(1), 1)
         self.assertEqual(FileSize('1'), 1)
         self.assertEqual(FileSize('-1'), -1)

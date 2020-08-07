@@ -203,7 +203,7 @@ class FileSize(int):
     Subclass of int to allow parsing & custom file size formatting.
     '''
 
-    def __new__(cls, value, base=10, default_binary=True, case_sensitive=True):
+    def __new__(cls, value=0, base=10, default_binary=True, case_sensitive=True):
         '''
         Parse file size, only accept ints as float has loss of precision, and using it is usually a user error.
         Otherwise allow any string int() allows.
