@@ -43,9 +43,10 @@ Default base if it is not clear what the unit is (i.e. if it is not 'mib' or 'me
 - format type:      `[hH][size_format][^exponent]`
     - `h`:              Base 1000
     - `H`:              Base 1024
-- `size_format`:    `c | cs | cv | e | ev | s | sv`
+- `size_format`:    `c | cs | css | cv | e | ev | s | sv`
     - `c`:              Commonly used case-sensitive suffixes 
     - `cs`:             Commonly used abbreviated case-sensitive suffixes
+    - `css`:            Similar to `cs` but even more abbreviated `Base 1000` (e.g. `k` instead of ` kb`)
     - `cv`:             Commonly used verbose case-sensitive suffixes
     - `e`:              IEC suffixes
     - `ev`:             IEC verbose suffixes
