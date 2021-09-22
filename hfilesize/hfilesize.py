@@ -54,6 +54,31 @@ class Format:
         ],
     }
 
+    casing_shorter = {
+        1024: [
+            '',
+            'K',
+            'M',
+            'G',
+            'T',
+            'P',
+            'E',
+            'Z',
+            'Y',
+        ],
+        1000: [
+            '',
+            'k',
+            'm',
+            'g',
+            't',
+            'p',
+            'e',
+            'z',
+            'y',
+        ],
+    }
+
     casing_verbose = {
         1024: [
             (' byte', ' bytes'),
@@ -281,14 +306,14 @@ class FileSize(int):
         '''
         format specification:
             format type:    [hH][size_format][^exponent]
-            size_format:    c | cs | cv | e | ev | s | sv
+            size_format:    c | cs | css | cv | e | ev | s | sv
             exponent:       integer
 
         base is required sometimes if no exponent is specified
         always specifying the base gives a shorter format specification
         '''
         # is it an empty format or not a special format for the size class
-        matches = re.search(r'([hH])(?:(c|cs|cv|e|ev|s|sv)?(?:\^(\d+))?)?$', fmt)
+        matches = re.search(r'([hH])(?:(c|cs|css|cv|e|ev|s|sv)?(?:\^(\d+))?)?$', fmt)
         if not matches:
             return int(self).__format__(fmt)
         fmt_type, size_fmt, exponent = matches.groups()
@@ -296,6 +321,7 @@ class FileSize(int):
             None:   Format.casing,
             'c':    Format.casing,
             'cs':   Format.casing_short,
+            'css':  Format.casing_shorter,
             'cv':   Format.casing_verbose,
             'e':    Format.iec,
             'ev':   Format.iec_verbose,
