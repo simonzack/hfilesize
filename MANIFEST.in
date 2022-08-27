@@ -1,4 +1,3 @@
-
 include *.md
 include *.py
 recursive-exclude .git *

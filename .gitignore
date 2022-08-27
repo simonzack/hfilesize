@@ -1,8 +1,11 @@
-# PyCharm
+__pycache__/
+
+# *PyCharm*
 /.idea/
 
-# Byte-compiled
-__pycache__/
+# *PDM*
+/.pdm.toml
+/__pypackages__/
 
 # Distribution / packaging
 dist/

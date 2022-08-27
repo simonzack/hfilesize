@@ -1,6 +1,12 @@
 # Human Readable File Sizes
 Parses & Formats integer file sizes to human readable file sizes.
 
+## Development Setup
+To setup the project for development, run:
+
+    $ cd hfilesize/
+    $ pdm install
+
 ## Example Usage
 ### Parsing
 
